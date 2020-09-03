@@ -17,5 +17,10 @@ public class Member {
 
     private String username;
 
+    protected Member() {
+    }
+    public Member(String username) {
+        this.username = username;
+    }
 
 }

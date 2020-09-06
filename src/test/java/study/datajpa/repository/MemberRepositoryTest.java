@@ -246,5 +246,20 @@ class MemberRepositoryTest {
         List<Member> result = memberRepository.findMemberCustom();
     }
 
+    @Test
+    public void JpaEventBaseEntity() {
+        Member member = new Member("member1");
+        memberRepository.save(member);
+
+        member.setUsername("member2");
+
+        em.flush();
+        em.clear();
+
+        Member findMember = memberRepository.findById(member.getId()).get();
+
+        assertThat(findMember.getCreatedDate()).isEqualTo(member.getCreatedDate());
+        assertThat(findMember.getUpdatedDate()).isNotEqualTo(member.getUpdatedDate());
+    }
 
 }

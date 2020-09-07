@@ -8,6 +8,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.entity.Member;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -20,6 +22,9 @@ class MemberJpaRepositoryTest {
 
     @Autowired
     MemberJpaRepository memberJpaRepository;
+
+    @PersistenceContext
+    EntityManager em;
 
     @Test
     public void testMember() {
@@ -116,4 +121,21 @@ class MemberJpaRepositoryTest {
 
         assertThat(resultCount).isEqualTo(3);
     }
+
+    @Test
+    public void JpaEventBaseEntity() {
+        Member member = new Member("member1");
+        memberJpaRepository.save(member);
+
+        member.setUsername("member2");
+
+        em.flush();
+        em.clear();
+
+        Member findMember = memberJpaRepository.findById(member.getId()).get();
+
+        assertThat(findMember.getCreatedDate()).isEqualTo(member.getCreatedDate());
+        assertThat(findMember.getUpdatedDate()).isNotEqualTo(member.getUpdatedDate());
+    }
+
 }

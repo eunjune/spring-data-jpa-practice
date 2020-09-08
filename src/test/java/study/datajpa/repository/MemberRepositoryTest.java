@@ -276,7 +276,7 @@ class MemberRepositoryTest {
         em.clear();
 
         List<UsernameOnly> result = memberRepository.findProjectionsByUsername("m1");
-        
+
     }
 
 }
